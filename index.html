@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Access - Be My Valentine?</title>
+    <style>
+        * { box-sizing: border-box; }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            background-color: #ffdae0;
+            overflow: hidden;
+        }
+
+        /* LOGIN PAGE STYLING */
+        #login-page {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #ffdae0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 350px;
+        }
+
+        .login-box h2 { color: #d81b60; margin-bottom: 20px; }
+
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ffdae0;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #error-msg {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* MAIN CONTENT STYLING */
+        #main-content { display: none; }
+
+        .main-wrapper {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .left-side {
+            flex: 1;
+            background-image: url('BEZZ.jpg'); 
+            background-size: cover;
+            background-position: center;
+            border-right: 2px solid #ff4081;
+        }
+
+        .right-side {
+            flex: 1;
+            background-color: #fff5f7;
+            display: flex;
+            flex-direction: column; /* Stack container and footer */
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        #container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 420px;
+            width: 100%;
+            z-index: 10;
+            text-align: center;
+            max-height: 90vh; /* Prevents box from being taller than screen */
+            overflow-y: auto; /* Allows scrolling inside the box if content is long */
+        }
+/* Updated image sizing to show the face */
+#response-yes img, #final-reveal img {
+    width: 100%;
+    max-width: 100%; 
+    height: auto;
+    max-height: 280px;      /* Slightly increased height for better view */
+    object-fit: cover;
+    object-position: top;   /* <--- THIS ENSURES THE FACE IS NOT COVERED */
+    border-radius: 15px;
+    margin-top: 15px;
+    border: 3px solid #ff4081;
+}
+
+        #loveSong { width: 100%; margin-top: 20px; }
+
+        .hidden { display: none; }
+        h1 { color: #d81b60; font-size: 26px; line-height: 1.2; }
+        
+        .btn-group {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+            min-height: 120px;
+            position: relative;
+        }
+
+        button.choice-btn {
+            border: none;
+            padding: 12px 25px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            font-weight: bold;
+        }
+
+        #yesBtn { background-color: #4caf50; color: white; z-index: 100; }
+        #noBtn { background-color: #f44336; color: white; position: relative; }
+
+        .footer {
+    position: fixed;        /* Fixes it to the screen */
+    bottom: 0;              /* Pins it to the very bottom */
+    left: 0;
+    width: 100%;            /* Spans across both left and right sides */
+    height: 40px;           /* Gives it a set height */
+    background: rgba(255, 255, 255, 0.5); /* Semi-transparent white so it's readable */
+    backdrop-filter: blur(5px);           /* Makes it look modern/glassy */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: #d81b60;
+    font-weight: bold;
+    z-index: 10000;         /* Keeps it on top of everything */
+    border-top: 1px solid rgba(216, 27, 96, 0.2);
+}
+
+        @media (max-width: 768px) {
+            .main-wrapper { flex-direction: column; }
+            .left-side { flex: 0.7; border-right: none; border-bottom: 5px solid #ff4081; }
+            .right-side { flex: 1; padding-bottom: 50px; }
+            .footer { position: relative; bottom: 0; margin-top: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-page">
+        <div class="login-box">
+            <h2>🔒 Private Access</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="checkLogin()">Unlock ❤️</button>
+            <p id="error-msg">Incorrect Username or Password</p>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div class="main-wrapper">
+            <div class="left-side"></div>
+
+            <div class="right-side">
+                <div id="container">
+                    
+                    <div id="ask-section">
+                        <h1>Will you be my Valentine? 🌹</h1>
+                        <div class="btn-group">
+                            <button id="yesBtn" class="choice-btn" onclick="revealLove()">Yes!</button>
+                            <button id="noBtn" class="choice-btn" onmouseover="moveButton()" onclick="sayNo()">No</button>
+                        </div>
+                    </div>
+
+                    <div id="response-yes" class="hidden">
+                        <div id="first-reveal">
+                            <h1 style="font-size: 35px;">ቤዛ ❤️</h1>
+                            <img src="BEZ.jpg" alt="Beza Photo 1">
+                            <p style="font-weight: bold; margin-top: 15px;">የኔ ቆንጆ አፈቅርሻለዉ</p>
+                        </div>
+
+                        <div id="final-reveal" class="hidden">
+                            <h1 style="font-size: 26px;">ቤዛዬ ❤️ <br> Happy Valentine </h1>
+                            <img src="BE.jpg" alt="Beza Photo 2">
+                            <p style="font-weight: bold; color: black; margin-top: 10px; font-size: 14px;">"I wish I could reach through this screen and give you the biggest hug. Until then, I hope this little website reminds you that my love for you grows every single day, no matter where we are. You are my home, Beza ❤️"</p>
+                        </div>
+
+                        <audio id="loveSong" controls>
+                            <source src="song.mp3" type="audio/mpeg">
+                        </audio>
+                    </div>
+
+                    <div id="response-no" class="hidden">
+                        <h1>Caddas 💔</h1>
+                        <p>"ኤሬ ባክሽ......ሌላስ ዬሌሽም" <br> "______________________" !</p>
+                        <button onclick="location.reload()" style="background:#555; color:white; border-radius: 50px; padding: 10px 20px; border: none; cursor: pointer;">Try Again</button>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    Made with Bና for Beza | 2026
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            if (user === "BEZA" && pass === "ቤዛ") {
+                document.getElementById('login-page').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        let yesSize = 18;
+        function moveButton() {
+            const noBtn = document.getElementById('noBtn');
+            const yesBtn = document.getElementById('yesBtn');
+            const x = Math.random() * 100 - 50;
+            const y = Math.random() * 100 - 50;
+            noBtn.style.transform = `translate(${x}px, ${y}px)`;
+            yesSize += 6;
+            yesBtn.style.fontSize = yesSize + "px";
+        }
+
+        function revealLove() {
+            document.getElementById('ask-section').classList.add('hidden');
+            document.getElementById('response-yes').classList.remove('hidden');
+            const audio = document.getElementById('loveSong');
+            audio.play();
+        }
+
+        function sayNo() {
+            document.getElementById('ask-section').classList.add('hidden');
+            document.getElementById('response-no').classList.remove('hidden');
+        }
+
+        document.getElementById('loveSong').addEventListener('ended', function() {
+            document.getElementById('first-reveal').classList.add('hidden');
+            document.getElementById('final-reveal').classList.remove('hidden');
+            this.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
